@@ -1,0 +1,155 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  body {
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Content area */
+  .main-content {
+    flex: 1;
+    padding: 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .content-wrapper {
+    max-width: 800px;
+  }
+
+  .content-wrapper h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .content-wrapper p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+  }
+
+  /* Footer styles */
+  .footer {
+    width: 100%;
+    padding: 24px;
+    background-color: #ffffff;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+    margin-top: auto;
+    /* margin-top: 65% */
+  }
+
+  .footer-text {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+
+  .footer-text a {
+    text-decoration: underline;
+    color: inherit;
+    transition: color 0.3s ease;
+  }
+
+  .footer-text a:hover {
+    color: #4f46e5;
+  }
+
+  .footer-divider {
+    width: 60%;
+    max-width: 400px;
+    border: none;
+    border-top: 1px solid #d1d5db;
+    margin: 0;
+  }
+
+  .footer-socials {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .footer-socials a {
+    color: #6b7280;
+    font-size: 1.25rem;
+    transition: color 0.3s ease, transform 0.2s ease;
+  }
+
+  .footer-socials a:hover {
+    color: #111827;
+    transform: scale(1.1);
+  }
+
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    .footer {
+      background-color: #1f2937;
+      border-color: #4b5563;
+    }
+
+    .footer-text,
+    .footer-socials a {
+      color: #9ca3af;
+    }
+
+    .footer-socials a:hover {
+      color: #ffffff;
+    }
+
+    .footer-divider {
+      border-color: #4b5563;
+    }
+
+    .footer-text a:hover {
+      color: #818cf8;
+    }
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .content-wrapper h1 {
+      font-size: 2rem;
+    }
+
+    .content-wrapper p {
+      font-size: 1rem;
+    }
+
+    .main-content {
+      padding: 1rem;
+    }
+  }
+</style>
+<footer class="footer">
+  <span class="footer-text">
+    © 2025 Made by
+    <a href="https://www.instagram.com/magurokung_art/" target="_blank" rel="noopener noreferrer">
+      MaguroKung_Art
+    </a>. All rights reserved.
+  </span>
+  <hr class="footer-divider">
+  <div class="footer-socials">
+    <a href="https://www.instagram.com/magurokung_art/" target="_blank" rel="noopener noreferrer" title="Instagram">
+      <i class="fab fa-instagram"></i>
+
+      <hr class="footer-divider">
+  <div class="footer-socials">
+    <a href="https://discord.gg/nTRjuYdG" target="_blank" rel="noopener noreferrer" title="discord">
+      <i class="fab fa-discord"></i>
+
+       <hr class="footer-divider">
+  <div class="footer-socials">
+    <a href="https://steamcommunity.com/profiles/76561199851956305" target="_blank" rel="noopener noreferrer" title="steam">
+      <i class="fab fa-steam"></i>
+    </a>
+  </div>
+</footer>

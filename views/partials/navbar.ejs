@@ -1,0 +1,416 @@
+<style>
+  .navbar {
+    width: 100%;
+    backdrop-filter: blur(10px);
+    padding: 20px 0;
+    position: fixed;
+    top: 0;
+    z-index: 999;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .navbar-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+
+  .navbar-menu {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .navbar-menu li a {
+    color: #d1d5db;
+    /* สีเทาอ่อน */
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+  }
+
+  .navbar-menu li a:hover {
+    color: white;
+  }
+
+  .navbar-right .navbar-login {
+    color: #d1d5db;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+  }
+
+  .navbar-right .navbar-login:hover {
+    color: white;
+  }
+
+  .profile-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    color: #eee;
+  }
+
+  .profile-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid #00bfff;
+    transition: border-color 0.3s ease;
+  }
+
+  .profile-dropdown:hover .profile-avatar {
+    border-color: #008fc1;
+  }
+
+  .profile-name {
+    font-weight: 600;
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background-color: #1f1f1f;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    min-width: 150px;
+    padding: 10px;
+    text-align: center;
+    z-index: 1000;
+  }
+
+  .dropdown-content.show {
+    display: block;
+  }
+
+  .dropdown-content p {
+    margin: 0 0 10px 0;
+    font-weight: bold;
+    color: #00bfff;
+  }
+
+  .dropdown-content p.coins {
+    color: #fff;
+    font-weight: 500;
+    font-size: 14px;
+    margin: 0 0 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .admin-btn {
+    display: inline-block;
+    padding: 8px 15px;
+    color: #fff;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  .admin-btn.profile-btn {
+    backdrop-filter: blur(10px);
+    background: linear-gradient(145deg, #00bfff15, #00bfff15);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .admin-btn.profile-btn:hover {
+    background-color: #00bfff;
+    color: #121212;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 191, 255, 0.3);
+  }
+
+  .logout-btn {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: #ff0000;
+    color: #ffffff;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+
+  .logout-btn:hover {
+    background-color: #c10000;
+  }
+
+  /* Mobile Hamburger Menu */
+  .mobile-menu-toggle {
+    display: none;
+    background: rgba(31, 31, 31, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #d1d5db;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 8px 10px;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-menu-toggle:hover {
+    color: white;
+    background: rgba(0, 191, 255, 0.2);
+    border-color: rgba(0, 191, 255, 0.4);
+  }
+
+  /* Responsive Media Queries */
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 15px;
+      position: relative;
+    }
+
+    .navbar-left {
+      gap: 10px;
+    }
+
+    .navbar-logo {
+      width: 35px;
+      height: 35px;
+    }
+
+    .mobile-menu-toggle {
+      display: block;
+    }
+
+    .navbar-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      flex-direction: column;
+      gap: 0;
+      padding: 20px;
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      display: none;
+      margin: 0;
+    }
+
+    .navbar-menu.show {
+      display: flex;
+    }
+
+    .navbar-menu li {
+      width: 100%;
+    }
+
+    .navbar-menu li a {
+      padding: 15px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      justify-content: flex-start;
+      width: 100%;
+    }
+
+    .navbar-menu li:last-child a {
+      border-bottom: none;
+    }
+
+    .profile-name {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .navbar {
+      padding: 15px 0;
+    }
+
+    .container {
+      padding: 0 10px;
+    }
+
+    .navbar-logo {
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+    }
+
+    .navbar-menu {
+      gap: 10px;
+    }
+
+    .navbar-menu li a {
+      font-size: 14px;
+    }
+
+    .profile-avatar {
+      width: 30px;
+      height: 30px;
+    }
+
+    .dropdown-content {
+      right: -10px;
+      min-width: 140px;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .navbar-menu {
+      gap: 8px;
+    }
+
+    .navbar-menu li a {
+      gap: 4px;
+      font-size: 13px;
+    }
+
+    .dropdown-content {
+      right: -20px;
+      min-width: 130px;
+      font-size: 13px;
+    }
+
+    .admin-btn, .logout-btn {
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+  }
+</style>
+
+<nav class="navbar">
+  <div class="container">
+    <div class="navbar-left">
+      <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <a href="/" class="navbar-logo-link">
+        <img src="/img/logo.jpg" alt="Logo" class="navbar-logo" />
+      </a>
+      <ul class="navbar-menu" id="navbarMenu">
+        <li><a href="/"><i class="fa-solid fa-house"></i> <span>Home</span></a></li>
+        <li><a href="/trades"><i class="fa-solid fa-recycle"></i> <span>Trade</span></a></li>
+        <li><a href="/product"><i class="fa-brands fa-steam"></i> <span>Steam Wallet</span></a></li>
+        <li><a href="/posts"><i class="fa-solid fa-palette"></i> <span>Art</span></a></li>
+        <li><a href="/how-to"><i class="fa-solid fa-question"></i> <span>How to</span></a></li>
+      </ul>
+    </div>
+
+    <div class="navbar-right">
+      <% if (user) { %>
+        <div class="profile-dropdown" id="profileDropdown">
+          <img src="<%= user.photos?.[2]?.value || user.photos?.[0]?.value %>" alt="Avatar" class="profile-avatar"
+            id="profileToggle" />
+          <span class="profile-name">
+            <%= user.displayName %>
+          </span>
+          <div class="dropdown-content" id="dropdownContent">
+            <p><strong><%= user.displayName %></strong></p>
+
+            <a href="/profile" class="admin-btn profile-btn">
+              <i class="fa-solid fa-user"></i> Profile
+            </a>
+
+            <a href="/top-up" class="admin-btn profile-btn">
+              <i class="fa-solid fa-coins"></i> Top Up
+            </a>
+
+            <a href="/purchase/history" class="admin-btn profile-btn">
+              <i class="fa-solid fa-clock"></i> History
+            </a>
+
+            <% if (adminSteamIds.includes(user.steamId)) { %>
+              <a href="/admin" class="admin-btn profile-btn"><i class="fa-solid fa-screwdriver-wrench"></i> Admin</a>
+            <% } %>
+
+            <a href="/auth/logout" class="logout-btn">
+              <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+          </div>
+        </div>
+      <% } else { %>
+        <a href="/auth/steam" class="navbar-login">
+          <i class="fa-brands fa-steam"></i> Login
+        </a>
+      <% } %>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Dropdown toggle
+  const toggle = document.getElementById('profileToggle');
+  const dropdown = document.getElementById('dropdownContent');
+  if (toggle && dropdown) {
+    toggle.addEventListener('click', () => {
+      dropdown.classList.toggle('show');
+    });
+    document.addEventListener('click', (e) => {
+      if (!toggle.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove('show');
+      }
+    });
+  }
+
+  // Mobile menu toggle
+  const mobileToggle = document.getElementById('mobileMenuToggle');
+  const navbarMenu = document.getElementById('navbarMenu');
+  if (mobileToggle && navbarMenu) {
+    mobileToggle.addEventListener('click', () => {
+      navbarMenu.classList.toggle('show');
+      const icon = mobileToggle.querySelector('i');
+      icon.classList.toggle('fa-bars');
+      icon.classList.toggle('fa-times');
+    });
+
+    // Close mobile menu when clicking on a link
+    navbarMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navbarMenu.classList.remove('show');
+        const icon = mobileToggle.querySelector('i');
+        icon.classList.add('fa-bars');
+        icon.classList.remove('fa-times');
+      });
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!mobileToggle.contains(e.target) && !navbarMenu.contains(e.target)) {
+        navbarMenu.classList.remove('show');
+        const icon = mobileToggle.querySelector('i');
+        icon.classList.add('fa-bars');
+        icon.classList.remove('fa-times');
+      }
+    });
+  }
+</script>
