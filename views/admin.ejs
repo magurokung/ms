@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin - Page</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a2d9a56a91.js" crossorigin="anonymous"></script>
+  <style>
+    .admin-header {
+      margin-top: 100px;
+      text-align: center;
+      padding: 2rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .admin-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #00aaff, #4bcffa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .admin-subtitle {
+      color: #b3b3b3;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .admin-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .manage-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 12px 24px;
+      background: #00aaff;
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .manage-btn:hover {
+      background: #0099cc;
+    }
+
+    .manage-btn i {
+      font-size: 16px;
+    }
+
+    .stats-container {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-icon {
+      font-size: 1.2rem;
+    }
+
+    .stat-number {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #b3b3b3;
+    }
+
+    .pending-stat {
+      color: #ffa502;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .post-card {
+      background: #1a1a1a;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid #333;
+      max-width: 100%;
+    }
+
+    .post-image-container {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .post-image {
+      width: 100%;
+      height: 250px;
+      display: block;
+      object-fit: cover;
+    }
+
+    .post-sender {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      color: #ccc;
+      background-color: #111;
+      border-bottom: 1px solid #333;
+      font-weight: 500;
+    }
+
+    .post-actions {
+      padding: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      background: #1a1a1a;
+    }
+
+    .action-form {
+      display: inline-block;
+      flex: 1;
+    }
+
+    .btn {
+      padding: 12px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: white;
+      width: 100%;
+      justify-content: center;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-approve {
+      background: #27ae60;
+      border: 1px solid #2ecc71;
+    }
+
+    .btn-approve:hover {
+      background: #2ecc71;
+    }
+
+    .btn-reject {
+      background: #e74c3c;
+      border: 1px solid #c0392b;
+    }
+
+    .btn-reject:hover {
+      background: #c0392b;
+    }
+
+    .btn-icon {
+      font-size: 14px;
+    }
+
+    /* Loading state */
+    .btn.loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .btn.loading::after {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, .3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Empty state */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem 2rem;
+      background: #1a1a1a;
+      border-radius: 8px;
+      border: 2px dashed #333;
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      color: #555;
+      margin-bottom: 1rem;
+    }
+
+    .empty-title {
+      font-size: 1.4rem;
+      color: #999;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .empty-subtitle {
+      color: #666;
+      font-size: 1rem;
+    }
+
+    /* Success/Error Messages */
+    .message {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 1rem 1.5rem;
+      border-radius: 6px;
+      color: white;
+      font-weight: 600;
+      z-index: 1000;
+      transform: translateX(400px);
+      transition: transform 0.3s ease;
+    }
+
+    .message.show {
+      transform: translateX(0);
+    }
+
+    .message.success {
+      background: #27ae60;
+    }
+
+    .message.error {
+      background: #e74c3c;
+    }
+
+    /* Confirmation Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #1a1a1a;
+      padding: 2rem;
+      border-radius: 8px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      border: 1px solid #333;
+    }
+
+    .modal-title {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .modal-text {
+      color: #ccc;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .modal-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .modal-btn-cancel {
+      background: #666;
+      color: white;
+    }
+
+    .modal-btn-cancel:hover {
+      background: #777;
+    }
+
+    .modal-btn-confirm {
+      background: #e74c3c;
+      color: rgb(255, 255, 255);
+    }
+
+    .modal-btn-confirm:hover {
+      background: #c0392b;
+    }
+
+    .image-modal {
+      display: none;
+      position: fixed;
+      z-index: 3000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(6px);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-modal.active {
+      display: flex;
+    }
+
+    .image-modal-content {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 10px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+      object-fit: contain;
+    }
+
+    .image-modal-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: #fff;
+      font-size: 32px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 3001;
+    }
+
+    .image-modal-close:hover {
+      color: #ccc;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .gallery {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .admin-title {
+        font-size: 1.8rem;
+      }
+
+      .gallery {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 1rem;
+        gap: 1.5rem;
+      }
+
+      .post-image {
+        height: 200px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .gallery {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .post-image {
+        height: 180px;
+      }
+
+      .post-actions {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 0.5rem;
+      }
+
+      .stats-container {
+        gap: 1rem;
+      }
+
+      .stat-card {
+        padding: 0.6rem 1rem;
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .admin-actions {
+        margin-bottom: 1rem;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .manage-btn {
+        padding: 10px 20px;
+        font-size: 13px;
+        width: 200px;
+        justify-content: center;
+      }
+
+      .image-modal-close {
+        font-size: 28px;
+        top: 15px;
+        right: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .admin-header {
+        padding: 1.5rem 1rem;
+      }
+
+      .modal-content {
+        margin: 1rem;
+      }
+
+      .modal-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <%- include('partials/navbar') %>
+
+    <div class="admin-header">
+      <h1 class="admin-title">
+        <i class="fa fa-clipboard-check"></i> Manage Posts
+      </h1>
+      <p class="admin-subtitle">Review and approve submissions awaiting review</p>
+
+      <div class="admin-actions">
+        <a href="/admin/manage-posts" class="manage-btn">
+          <i class="fa fa-cog"></i>
+          <span>Manage Posts</span>
+        </a>
+        <a href="/admin/manage-product" class="manage-btn">
+          <i class="fa fa-cog"></i>
+          <span>Manage Product</span>
+        </a>
+        <a href="/admin/manage-user" class="manage-btn">
+          <i class="fa fa-cog"></i>
+          <span>Manage User</span>
+        </a>
+      </div>
+
+      <div class="stats-container">
+        <div class="stat-card">
+          <i class="fa fa-clock stat-icon pending-stat"></i>
+          <div>
+            <div class="stat-number pending-stat" id="pendingCount">
+              <%= posts.length %>
+            </div>
+            <div class="stat-label">Pending</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <i class="fa fa-user stat-icon pending-stat"></i>
+          <div>
+            <div class="stat-number pending-stat" id="pendingCount">
+              <%= userCount %>
+            </div>
+            <div class="stat-label">User</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gallery" id="gallery">
+      <% if(posts.length===0) { %>
+        <div class="empty-state">
+          <i class="fa fa-inbox empty-icon"></i>
+          <h3 class="empty-title">No posts pending approval</h3>
+          <p class="empty-subtitle">All submissions have been reviewed.</p>
+        </div>
+        <% } else { %>
+          <% posts.forEach(post=> { %>
+            <div class="post-card" data-post-id="<%= post._id %>">
+              <div class="post-image-container">
+                <img src="<%= post.imageUrl %>" alt="Preview" class="post-image" loading="lazy" />
+              </div>
+              <div class="post-sender">
+                By: <%= post.user_name || 'Anonymous' %>
+              </div>
+              <div class="post-actions">
+                <form class="action-form" method="POST" action="/admin/posts/<%= post._id %>/approve">
+                  <button type="submit" class="btn btn-approve" data-action="approve">
+                    <i class="fa fa-check btn-icon"></i>
+                    <span>Approve</span>
+                  </button>
+                </form>
+                <form class="action-form" method="POST" action="/admin/posts/<%= post._id %>/reject">
+                  <button type="submit" class="btn btn-reject" data-action="reject">
+                    <i class="fa fa-times btn-icon"></i>
+                    <span>Reject</span>
+                  </button>
+                </form>
+              </div>
+            </div>
+            <% }); %>
+              <% } %>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+      <div class="modal-content">
+        <h3 class="modal-title" id="modalTitle">Confirm Action</h3>
+        <p class="modal-text" id="modalText">Are you sure you want to proceed?</p>
+        <div class="modal-actions">
+          <button class="modal-btn modal-btn-cancel" onclick="hideModal()">Cancel</button>
+          <button class="modal-btn modal-btn-confirm" id="confirmBtn">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message Container -->
+    <div id="messageContainer"></div>
+
+    <!-- Image Preview Modal -->
+    <div id="imageModal" class="image-modal">
+      <span class="image-modal-close">&times;</span>
+      <img class="image-modal-content" id="modalImage" />
+    </div>
+
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const imageModal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const closeBtn = document.querySelector('.image-modal-close');
+
+        // เพิ่ม event listener ให้กับรูปภาพทั้งหมดในการ์ด
+        function addImageClickListeners() {
+          const images = document.querySelectorAll('.post-image');
+
+          images.forEach(function (img) {
+            img.addEventListener('click', function (e) {
+              e.stopPropagation();
+              imageModal.classList.add('active');
+              modalImg.src = this.src;
+              document.body.style.overflow = 'hidden';
+            });
+          });
+        }
+
+
+        // เรียกใช้งานครั้งแรก
+        addImageClickListeners();
+
+        // ปิด modal เมื่อกด X
+        closeBtn.addEventListener('click', function () {
+          imageModal.classList.remove('active');
+          document.body.style.overflow = 'auto';
+        });
+
+        // ปิด modal เมื่อกดพื้นที่ว่าง
+        imageModal.addEventListener('click', function (e) {
+          if (e.target === imageModal) {
+            imageModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+          }
+        });
+
+        // ปิด modal เมื่อกด ESC
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && imageModal.classList.contains('active')) {
+            imageModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+          }
+        });
+
+        // หากมีการโหลดรูปใหม่ (เช่น หลังจาก upload) ให้เพิ่ม listener ใหม่
+        const originalReload = location.reload;
+        location.reload = function () {
+          originalReload.call(location);
+          setTimeout(addImageClickListeners, 100);
+        };
+      });
+    </script>
+
+    <script>
+      let currentForm = null;
+
+      // Handle form submissions with confirmation
+      document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+
+          const form = btn.closest('form');
+          const action = btn.dataset.action;
+
+          currentForm = form;
+
+          const modalTitle = document.getElementById('modalTitle');
+          const modalText = document.getElementById('modalText');
+          const confirmBtn = document.getElementById('confirmBtn');
+
+          if (action === 'approve') {
+            modalTitle.textContent = 'Confirm Approval';
+            modalText.textContent = 'Are you sure you want to approve this post?';
+            confirmBtn.textContent = 'Approve';
+            confirmBtn.className = 'modal-btn btn-approve';
+          } else {
+            modalTitle.textContent = 'Confirm Rejection';
+            modalText.textContent = 'Are you sure you want to reject this post? This action cannot be undone.';
+            confirmBtn.textContent = 'Reject';
+            confirmBtn.className = 'modal-btn btn-reject';
+          }
+
+          showModal();
+        });
+      });
+
+      // Confirm button handler
+      document.getElementById('confirmBtn').addEventListener('click', () => {
+        if (currentForm) {
+          const btn = currentForm.querySelector('.btn');
+
+          // Add loading state
+          btn.classList.add('loading');
+          btn.disabled = true;
+
+          // Submit form
+          currentForm.submit();
+        }
+        hideModal();
+      });
+
+      // Modal functions
+      function showModal() {
+        document.getElementById('confirmModal').classList.add('show');
+      }
+
+      function hideModal() {
+        document.getElementById('confirmModal').classList.remove('show');
+        currentForm = null;
+      }
+
+      // Close modal when clicking outside
+      document.getElementById('confirmModal').addEventListener('click', (e) => {
+        if (e.target.id === 'confirmModal') {
+          hideModal();
+        }
+      });
+
+      // Keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          hideModal();
+        }
+      });
+
+      // Show success/error messages
+      function showMessage(type, text) {
+        const messageContainer = document.getElementById('messageContainer');
+        const message = document.createElement('div');
+        message.className = `message ${type}`;
+        message.innerHTML = `
+        <i class="fa fa-${type === 'success' ? 'check' : 'exclamation-triangle'}"></i>
+        ${text}
+      `;
+
+        messageContainer.appendChild(message);
+
+        setTimeout(() => {
+          message.classList.add('show');
+        }, 100);
+
+        setTimeout(() => {
+          message.classList.remove('show');
+          setTimeout(() => {
+            message.remove();
+          }, 300);
+        }, 3000);
+      }
+
+      // Image lazy loading fallback
+      document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+        img.addEventListener('error', () => {
+          img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjY2IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPkltYWdlIG5vdCBmb3VuZDwvdGV4dD4KPHN2Zz4=';
+        });
+      });
+
+      // Update stats (if you have real-time data)
+      function updateStats() {
+        const pendingCount = document.querySelectorAll('.post-card').length;
+        document.getElementById('pendingCount').textContent = pendingCount;
+      }
+
+      // Call updateStats on page load
+      updateStats();
+    </script>
+
+    <%- include('partials/footer') %>
+</body>
+
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Purchase History</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      font-family: 'Inter', sans-serif;
+      margin-top: 120px;
+      background: #f8fafc;
+      min-height: calc(100vh - 120px);
+    }
+
+    .header-section {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 2rem 0;
+    }
+
+    .main-container h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: #64748b;
+      font-size: 1.1rem;
+      font-weight: 400;
+    }
+
+    .content-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+
+    .no-history {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .no-history-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      color: #cbd5e1;
+    }
+
+    .no-history p {
+      font-size: 1.2rem;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .table-header {
+      background: #f1f5f9;
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .table-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #334155;
+      margin: 0;
+    }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    .history-table thead {
+      background: #f8fafc;
+    }
+
+    .history-table th {
+      padding: 1.25rem 2rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .history-table td {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle;
+    }
+
+    .history-table tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    .history-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .product-name {
+      font-weight: 500;
+      color: #1e293b;
+      font-size: 1rem;
+    }
+
+    .price {
+      font-weight: 600;
+      color: #059669;
+      font-size: 1.1rem;
+    }
+
+    .date {
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      background: white;
+      padding: 1.5rem 2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e2e8f0;
+      text-align: center;
+      min-width: 150px;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #3b82f6;
+      display: block;
+    }
+
+    .stat-label {
+      color: #64748b;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        padding: 1rem;
+        margin-top: 80px;
+      }
+
+      .main-container h1 {
+        font-size: 2rem;
+      }
+
+      .stats-bar {
+        gap: 1rem;
+      }
+
+      .stat-item {
+        min-width: 120px;
+        padding: 1rem 1.5rem;
+      }
+
+      .history-table th,
+      .history-table td {
+        padding: 1rem;
+      }
+
+      .table-header {
+        padding: 1rem 1.5rem;
+      }
+
+      .history-table th:nth-child(3),
+      .history-table td:nth-child(3) {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-bar {
+        justify-content: space-between;
+      }
+
+      .stat-item {
+        flex: 1;
+        min-width: 0;
+        padding: 1rem;
+      }
+
+      .stat-number {
+        font-size: 1.5rem;
+      }
+
+      .stat-label {
+        font-size: 0.75rem;
+      }
+
+      .history-table th,
+      .history-table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <%- include('./partials/navbar') %>
+  
+  <main class="main-container">
+    <div class="header-section">
+      <h1>Purchase History</h1>
+      <p class="subtitle">All the products you have ordered</p>
+    </div>
+
+    <% if (history.length === 0) { %>
+      <div class="content-card">
+        <div class="no-history">
+          <div class="no-history-icon">🛒</div>
+          <p>You have no purchase history yet.</p>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-number"><%= history.length %></span>
+          <div class="stat-label">Total Orders</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number"><%= history.reduce((sum, item) => sum + item.price, 0).toLocaleString() %></span>
+          <div class="stat-label">Total Spending (THB)</div>
+        </div>
+      </div>
+
+      <div class="content-card">
+        <div class="table-header">
+          <h3 class="table-title">Order Details</h3>
+        </div>
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>ราคา</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% history.forEach(item => { %>
+              <tr>
+                <td>
+                  <div class="product-name"><%= item.product?.name || 'Product name not found' %></div>
+                </td>
+                <td>
+                  <div class="price"><%= item.price.toLocaleString() %> THB</div>
+                </td>
+                <td>
+                  <div class="date"><%= item.purchasedAt.toLocaleString("th-TH") %></div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </main>
+  
+  <%- include('./partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>Home - Page</title>
+</head>
+<style>
+  .intro-section {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+  }
+  .left-side {
+    flex: 1.2;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .right-side {
+    flex: 0.8;
+    background: linear-gradient(110deg, rgba(15, 22, 54, 0.7) 65%, rgba(15, 22, 54, 0.7) 100%);
+    display: flex;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    padding: 160px 150px;
+    box-sizing: border-box;
+    clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%);
+  }
+  .right-side h1 {
+    font-size: 3.5rem;
+    font-weight: 900;
+    margin-bottom: 20px;
+  }
+  .right-side p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 40px;
+    letter-spacing: 0.04em;
+  }
+  .btn-login {
+    display: inline-block;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.2rem;
+    padding: 12px 35px;
+    border: 2px solid #00bfff;
+    color: #00bfff;
+    border-radius: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    width: max-content;
+    transform: skew(-12deg);
+    background: transparent;
+    margin: 20px 0;
+  }
+  .btn-login span {
+    display: inline-block;
+    transform: skew(12deg);
+  }
+  .btn-login:hover {
+    background-color: #00bfff;
+    color: white;
+  }
+  .maguro-text {
+    font-size: 7rem;
+    font-weight: bold;
+    color: white;
+    animation: gentleBounce 2s infinite ease-in-out;
+    display: inline-block;
+  }
+  .text-right {
+    color: #00bfff;
+    display: inline-block;
+  }
+
+  .mobile-maguro-text {
+    display: none;
+  }
+
+  @keyframes bounce {
+    0%,
+    100% {
+      transform: skew(-12deg) translateY(0);
+    }
+    50% {
+      transform: skew(-12deg) translateY(-15px);
+    }
+  }
+
+  @keyframes gentleBounce {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1200px) {
+    .right-side {
+      padding: 120px 100px;
+    }
+    .right-side h1 {
+      font-size: 3rem;
+    }
+    .maguro-text {
+      font-size: 5.5rem;
+    }
+  }
+
+  @media (max-width: 968px) {
+    .intro-section {
+      flex-direction: column;
+      height: auto;
+      min-height: 100vh;
+      background: linear-gradient(110deg, rgba(15, 22, 54, 0.7) 65%, rgba(15, 22, 54, 0.7) 100%);
+      backdrop-filter: blur(4px);
+    }
+    .left-side {
+      display: none;
+    }
+    .right-side {
+      flex: none;
+      height: 100vh;
+      clip-path: none;
+      padding: 60px 40px;
+      background: transparent;
+      backdrop-filter: none;
+      position: relative;
+    }
+    .right-side h1 {
+      display: none;
+    }
+    .mobile-maguro-text {
+      display: block;
+      font-size: 4rem;
+      font-weight: bold;
+      color: white;
+      animation: gentleBounce 2s infinite ease-in-out;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .mobile-maguro-text .text-right {
+      color: #00bfff;
+    }
+    .maguro-text {
+      font-size: 4rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .right-side h1 {
+      font-size: 2rem;
+    }
+    .right-side p {
+      font-size: 1rem;
+    }
+    .maguro-text {
+      font-size: 3rem;
+    }
+    .btn-login {
+      font-size: 1rem;
+      padding: 10px 25px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .right-side {
+      padding: 40px 20px;
+    }
+    .right-side h1 {
+      font-size: 1.8rem;
+    }
+    .maguro-text {
+      font-size: 2.5rem;
+    }
+  }
+</style>
+<body>
+  <%- include('partials/navbar', { user: user }) %>
+    <section class="intro-section">
+      <div class="left-side">
+        <div class="maguro-text">MAGU<span class="text-right">RO</span></div>
+      </div>
+      <div class="right-side">
+        <div class="mobile-maguro-text">MAGU<span class="text-right">RO</span></div>
+        <h1>MAGURO</h1>
+        <p>
+          Item Trading for Team Fortress 2
+        </p>
+        <% if (!user) { %>
+          <a href="/auth/steam" class="btn-login"><span>Login</span></a>
+        <% } else { %>
+          <a href="/trades" class="btn-login"><span>Go to Trading</span></a>
+        <% } %>
+      </div>
+    </section>
+    <%- include('partials/footer') %>
+</body>
+</html>

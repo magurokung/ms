@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= user.displayName %> Profile
+  </title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main-content {
+       background: none !important;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .profile-container {
+      max-width: 800px;
+      margin: 160px auto 40px auto;
+      background-color: #1e1e1e;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+
+    .profile-container h1 {
+      font-size: 32px;
+      margin-bottom: 25px;
+      color: #fff;
+    }
+
+    .avatar-img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 5px solid #00bfff;
+      margin-bottom: 20px;
+      object-fit: cover;
+    }
+
+    .profile-info {
+      font-size: 20px;
+      margin-bottom: 12px;
+      word-wrap: break-word;
+      color: #fff;
+    }
+
+    /* เพิ่ม styling สำหรับ balance */
+    .balance-info {
+      background: linear-gradient(135deg, #00bfff, #0080ff);
+      color: #fff;
+      padding: 15px 25px;
+      border-radius: 12px;
+      margin: 20px 0;
+      font-size: 24px;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(0, 191, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .balance-info i {
+      font-size: 28px;
+    }
+
+    .balance-amount {
+      font-size: 28px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .profile-links a {
+      display: inline-block;
+      margin: 12px;
+      padding: 12px 20px;
+      background-color: #ff0000;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+
+    .profile-links a:hover {
+      background-color: #cc0000;
+    }
+
+    /* เพิ่มปุ่ม Top-up */
+    .topup-btn {
+      background-color: #28a745 !important;
+      margin-right: 15px;
+    }
+
+    .topup-btn:hover {
+      background-color: #218838 !important;
+    }
+
+    /* Tablet และ Mobile ขนาดใหญ่ (768px ลงมา) */
+    @media screen and (max-width: 768px) {
+      .profile-container {
+        margin: 120px 20px 40px 20px;
+        padding: 30px 20px;
+        max-width: none;
+      }
+
+      .profile-container h1 {
+        font-size: 28px;
+        margin-bottom: 20px;
+      }
+
+      .avatar-img {
+        width: 120px;
+        height: 120px;
+        border-width: 4px;
+      }
+
+      .profile-info {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      .balance-info {
+        font-size: 20px;
+        padding: 12px 20px;
+      }
+
+      .balance-amount {
+        font-size: 24px;
+      }
+
+      .profile-links a {
+        margin: 10px 8px;
+        padding: 10px 16px;
+        font-size: 16px;
+      }
+    }
+
+    /* Mobile ขนาดกลาง (480px ลงมา) */
+    @media screen and (max-width: 480px) {
+      .profile-container {
+        margin: 100px 15px 10px 15px;
+         margin-bottom: 10px;
+        padding: 25px 15px;
+        border-radius: 12px;
+      }
+
+      .profile-container h1 {
+        font-size: 24px;
+        margin-bottom: 18px;
+      }
+
+      .avatar-img {
+        width: 100px;
+        height: 100px;
+        border-width: 3px;
+        margin-bottom: 15px;
+      }
+
+      .profile-info {
+        font-size: 16px;
+        margin-bottom: 8px;
+        padding: 0 10px;
+      }
+
+      .balance-info {
+        font-size: 18px;
+        padding: 10px 15px;
+        margin: 15px 0;
+      }
+
+      .balance-amount {
+        font-size: 22px;
+      }
+
+      .profile-links a {
+        display: block;
+        margin: 8px auto;
+        padding: 12px 20px;
+        max-width: 200px;
+        font-size: 16px;
+      }
+    }
+
+    /* Mobile ขนาดเล็ก (360px ลงมา) */
+    @media screen and (max-width: 360px) {
+      .profile-container {
+        margin: 80px 10px 20px 10px;
+        padding: 20px 12px;
+      }
+
+      .profile-container h1 {
+        font-size: 22px;
+        margin-bottom: 15px;
+      }
+
+      .avatar-img {
+        width: 90px;
+        height: 90px;
+      }
+
+      .profile-info {
+        font-size: 15px;
+        line-height: 1.4;
+      }
+
+      .balance-info {
+        font-size: 16px;
+        padding: 8px 12px;
+      }
+
+      .balance-amount {
+        font-size: 20px;
+      }
+
+      .profile-links a {
+        padding: 10px 16px;
+        font-size: 15px;
+      }
+    }
+
+    /* Landscape orientation สำหรับ mobile */
+    @media screen and (max-height: 500px) and (orientation: landscape) {
+      .profile-container {
+        margin: 60px 20px 20px 20px;
+        padding: 20px;
+      }
+
+      .avatar-img {
+        width: 80px;
+        height: 80px;
+      }
+
+      .profile-container h1 {
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+
+      .profile-info {
+        font-size: 14px;
+        margin-bottom: 6px;
+      }
+
+      .balance-info {
+        font-size: 14px;
+        padding: 6px 10px;
+        margin: 10px 0;
+      }
+
+      .balance-amount {
+        font-size: 18px;
+      }
+    }
+
+    /* เพิ่ม hover effects สำหรับ desktop */
+    @media (hover: hover) {
+      .avatar-img {
+        transition: transform 0.3s ease;
+      }
+
+      .avatar-img:hover {
+        transform: scale(1.05);
+      }
+
+      .balance-info {
+        transition: transform 0.3s ease;
+      }
+
+      .balance-info:hover {
+        transform: translateY(-2px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <%- include('partials/navbar', { user: user }) %>
+  
+  <div class="main-content">
+    <div class="profile-container">
+      <img src="<%= user.photos?.[2]?.value || user.photos?.[0]?.value %>" alt="avatar" class="avatar-img">
+      <h1>
+        <%= user.displayName %>
+      </h1>
+      <p class="profile-info"><strong>SteamID:</strong>
+        <%= user.id %>
+      </p>
+
+      <!-- เพิ่มส่วนแสดงยอดเงิน -->
+      <div class="balance-info">
+        <i class="fas fa-wallet"></i>
+        <span>Balance: </span>
+        <span class="balance-amount">
+          <%= balance.toLocaleString() %> Bath
+        </span>
+      </div>
+
+      <div class="profile-links">
+        <a href="/top-up" class="topup-btn">
+          <i class="fas fa-plus-circle"></i> Top up
+        </a>
+        <a href="/auth/logout" class="logout-btn-profile">
+          <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <%- include('partials/footer') %>
+  </footer>
+</body>
+
+</html>

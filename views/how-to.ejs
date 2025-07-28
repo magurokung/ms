@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>HOW TO USE - MAGURO</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+
+<style>
+    .howto-container {
+        padding: 100px 20px;
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        text-align: center;
+    }
+
+    .howto-header h1 {
+        font-size: 2.8rem;
+        color: #3399ff;
+        margin-bottom: 10px;
+    }
+
+    .howto-header p {
+        font-size: 1.1rem;
+        opacity: 0.8;
+        margin-bottom: 50px;
+    }
+
+    .howto-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .howto-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-left: 5px solid #3399ff;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .howto-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .howto-card i {
+        font-size: 2rem;
+        color: #66ccff;
+        margin-bottom: 15px;
+    }
+
+    .howto-card h2 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+
+    .howto-card p {
+        font-size: 1rem;
+        opacity: 0.9;
+    }
+
+    @media screen and (max-width: 768px) {
+        .howto-steps {
+            padding: 0 20px;
+        }
+    }
+</style>
+
+<body>
+
+    <%- include('./partials/navbar.ejs') %>
+
+        <section class="howto-container">
+            <div class="howto-header">
+                <h1>🔧 How to Use the Trading System</h1>
+                <p>Start trading items in just a few simple steps</p>
+            </div>
+
+            <div class="howto-steps">
+                <div class="howto-card">
+                    <i class="fa-brands fa-steam"></i>
+                    <h2>1. Login with Steam</h2>
+                    <p>Click the “Login with Steam” button to sign in with your account</p>
+                </div>
+
+                <div class="howto-card">
+                    <i class="fa-solid fa-link"></i>
+                    <h2>2. Connect Your Trade URL</h2>
+                    <p>The system will automatically retrieve your Trade URL, or you can add it manually</p>
+                </div>
+
+                <div class="howto-card">
+                    <i class="fa-solid fa-shuffle"></i>
+                    <h2>3. Start Trading</h2>
+                    <p>Select the items you want to trade safely and quickly with the bot</p>
+                </div>
+            </div>
+
+            </div>
+        </section>
+
+        <%- include('./partials/footer.ejs') %>
+</body>
+
+</html>

@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Art - MAGURO</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="https://kit.fontawesome.com/a2d9a56a91.js" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      padding: 2rem 1rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      margin-top: 120px;
+    }
+
+
+    .card {
+      background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateY(0) scale(1);
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(0, 191, 255, 0.3);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #00bfff, #0099cc, #00d4ff);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover img {
+      transform: scale(1.05);
+    }
+
+    .card-footer {
+      background: #1e1e1e;
+      padding: 12px 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: #ccc;
+      font-weight: 500;
+      transition: background 0.3s;
+    }
+
+    .card:hover .card-footer {
+      background: #232323;
+    }
+
+    .card-footer i {
+      color: #00bfff;
+    }
+
+
+    .like-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50px;
+      padding: 8px 14px;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .like-btn:hover {
+      background: rgba(0, 191, 255, 0.3);
+      transform: scale(1.05);
+    }
+
+    .like-btn.liked {
+      background: linear-gradient(135deg, #ff5e78, #ff3860);
+      color: white;
+      box-shadow: 0 0 8px rgba(255, 88, 88, 0.4);
+    }
+
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.2);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .like-btn span {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* ปุ่ม upload */
+    .upload-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, #00bfff, #0099cc);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      padding: 18px;
+      font-size: 24px;
+      box-shadow:
+        0 8px 25px rgba(0, 191, 255, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+    }
+
+    .upload-btn:hover {
+      transform: scale(1.1) rotate(90deg);
+      box-shadow:
+        0 12px 35px rgba(0, 191, 255, 0.6),
+        0 0 0 1px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Modal */
+    #uploadModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    #uploadModal.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    #uploadModal .modal-content {
+      background: linear-gradient(145deg, #00bfff15, #00bfff15);
+      padding: 2rem;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+
+    #uploadModal.active .modal-content {
+      transform: scale(1);
+    }
+
+    #uploadModal .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: transparent;
+      border: none;
+      color: #999;
+      font-size: 28px;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    #uploadModal .close-btn:hover {
+      color: #ff4757;
+      background: rgba(255, 71, 87, 0.1);
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: #00bfff;
+    }
+
+    .file-input-label {
+      cursor: pointer;
+      display: inline-block;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #00bfff, #0099cc);
+      color: white;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      border: 2px dashed transparent;
+    }
+
+    .file-input-label:hover {
+      background: linear-gradient(135deg, #0099cc, #007acc);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 191, 255, 0.3);
+    }
+
+    #preview {
+      margin-top: 20px;
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      object-fit: cover;
+    }
+
+    #previewBox {
+      margin-top: 20px;
+    }
+
+    .submit-btn {
+      margin-top: 20px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #00d4ff, #0099cc);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 16px;
+      display: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(135deg, #0099cc, #007acc);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .image-modal {
+      display: none;
+      position: fixed;
+      z-index: 3000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+    }
+
+    .image-modal-content {
+      position: relative;
+      margin: auto;
+      display: block;
+      width: 85%;
+      max-width: 900px;
+      max-height: 85%;
+      object-fit: contain;
+      top: 50%;
+      transform: translateY(-50%);
+      animation: imageZoom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 12px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+    }
+
+    @keyframes imageZoom {
+      from {
+        opacity: 0;
+        transform: scale(0.3) translateY(-50%);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(-50%);
+      }
+    }
+
+    .image-modal-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: #ffffff;
+      font-size: 40px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .image-modal-close:hover,
+    .image-modal-close:focus {
+      color: #ff4757;
+      background: rgba(0, 0, 0, 0.8);
+      transform: scale(1.1);
+    }
+
+    /* Modal เปิดแล้ว */
+    .image-modal.active {
+      display: block;
+      opacity: 1;
+    }
+
+    /* Loading animation */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, .3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .gallery {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      .card {
+        border-radius: 12px;
+      }
+
+      .card img {
+        height: 200px;
+      }
+
+      .upload-btn {
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
+
+      .image-modal-content {
+        width: 95%;
+        max-height: 80%;
+      }
+
+      .image-modal-close {
+        top: 15px;
+        right: 20px;
+        font-size: 30px;
+        width: 50px;
+        height: 50px;
+      }
+
+      #uploadModal .modal-content {
+        width: 95%;
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+
+      .modal-title {
+        font-size: 1.3rem;
+      }
+
+      .like-btn {
+        padding: 10px;
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .gallery {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        padding: 0.5rem;
+      }
+
+      .card img {
+        height: 180px;
+      }
+
+      .image-modal-content {
+        width: 98%;
+        max-height: 75%;
+      }
+
+      .image-modal-close {
+        top: 10px;
+        right: 15px;
+        font-size: 28px;
+        width: 45px;
+        height: 45px;
+      }
+
+      .upload-btn {
+        bottom: 15px;
+        right: 15px;
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+      }
+    }
+
+    /* Empty state */
+    .empty-gallery {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #666;
+    }
+
+    .empty-gallery i {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .empty-gallery h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #999;
+    }
+  </style>
+</head>
+
+<body>
+
+  <%- include('partials/navbar', { user: user }) %>
+
+    <main>
+      <!-- ปุ่ม upload -->
+      <button id="openUpload" class="upload-btn">
+        <i class="fa fa-plus"></i>
+      </button>
+
+      <!-- Modal ฟอร์มอัพโหลด -->
+      <div id="uploadModal">
+        <div class="modal-content">
+          <button class="close-btn" id="closeUpload">&times;</button>
+          <h3 class="modal-title">Upload Your Work</h3>
+          <form id="uploadForm" enctype="multipart/form-data">
+            <label for="imageInput" class="file-input-label">
+              <i class="fa fa-image"></i> Select Image
+            </label>
+            <input type="file" id="imageInput" name="image" accept="image/*" required>
+            <div id="previewBox" style="display:none;">
+              <img id="preview" src="#" alt="Preview" />
+            </div>
+            <button class="submit-btn" type="submit" id="submitBtn">
+              <i class="fa fa-upload"></i> Submit
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Gallery -->
+      <div class="gallery">
+        <% if (posts.filter(post=> post.status === 'approved').length === 0) { %>
+          <div class="empty-gallery" style="grid-column: 1 / -1;">
+            <i class="fa fa-image"></i>
+            <h3>No Artwork Available</h3>
+            <p>Be the first to post your work!</p>
+          </div>
+          <% } %>
+
+            <% posts.forEach(post=> { %>
+              <% if (post.status==='approved' ) { %>
+                <div class="card">
+                  <img src="<%= post.imageUrl %>" alt="ผลงาน" loading="lazy">
+
+                  <button class="like-btn <%= post.likedBy.includes(user?.id) ? 'liked' : '' %>"
+                    data-id="<%= post._id %>">
+                    <i class="fa-solid fa-heart"></i>
+                    <span>
+                      <%= post.likes %>
+                    </span>
+                  </button>
+
+                  <div class="card-footer">
+                    <div class="uploader">
+                      <i class="fa-solid fa-user"></i>
+                      <span>
+                        <%= post.user_name || "Anonymous" %>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <% } %>
+                  <% }) %>
+                    <div id="imageModal" class="image-modal">
+                      <span class="image-modal-close">&times;</span>
+                      <img class="image-modal-content" id="modalImage">
+                    </div>
+      </div>
+    </main>
+
+    <%- include('partials/footer') %>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const imageModal = document.getElementById('imageModal');
+          const modalImg = document.getElementById('modalImage');
+          const closeBtn = document.querySelector('.image-modal-close');
+
+          function addImageClickListeners() {
+            const images = document.querySelectorAll('.card img');
+
+            images.forEach(function (img) {
+              img.addEventListener('click', function (e) {
+                e.stopPropagation();
+                imageModal.classList.add('active');
+                modalImg.src = this.src;
+                document.body.style.overflow = 'hidden';
+              });
+            });
+          }
+
+          addImageClickListeners();
+
+          closeBtn.addEventListener('click', function () {
+            imageModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+          });
+
+          imageModal.addEventListener('click', function (e) {
+            if (e.target === imageModal) {
+              imageModal.classList.remove('active');
+              document.body.style.overflow = 'auto';
+            }
+          });
+
+          document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && imageModal.classList.contains('active')) {
+              imageModal.classList.remove('active');
+              document.body.style.overflow = 'auto';
+            }
+          });
+
+          const originalReload = location.reload;
+          location.reload = function () {
+            originalReload.call(location);
+            setTimeout(addImageClickListeners, 100);
+          };
+        });
+      </script>
+
+      <script>
+        const openUpload = document.getElementById('openUpload');
+        const uploadModal = document.getElementById('uploadModal');
+        const closeUpload = document.getElementById('closeUpload');
+        const imageInput = document.getElementById('imageInput');
+        const previewBox = document.getElementById('previewBox');
+        const preview = document.getElementById('preview');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // เปิด modal
+        openUpload.addEventListener('click', () => {
+          uploadModal.classList.add('active');
+          document.getElementById('uploadForm').reset();
+          previewBox.style.display = 'none';
+          submitBtn.style.display = 'none';
+        });
+
+        // ปิด modal
+        closeUpload.addEventListener('click', () => {
+          uploadModal.classList.remove('active');
+        });
+
+        // ปิด modal เมื่อคลิกข้างนอก
+        uploadModal.addEventListener('click', (e) => {
+          if (e.target === uploadModal) {
+            uploadModal.classList.remove('active');
+          }
+        });
+
+        // Preview รูป
+        imageInput.addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            // ตรวจสอบขนาดไฟล์ (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+              alert('The file is too large. Please select a file smaller than 5MB.');
+              return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = e => {
+              preview.src = e.target.result;
+              previewBox.style.display = 'block';
+              submitBtn.style.display = 'inline-block';
+            };
+            reader.readAsDataURL(file);
+          } else {
+            previewBox.style.display = 'none';
+            submitBtn.style.display = 'none';
+          }
+        });
+
+        // Submit form
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          // แสดง loading
+          const originalText = submitBtn.innerHTML;
+          submitBtn.innerHTML = '<span class="loading"></span>Uploading...';
+          submitBtn.disabled = true;
+
+          try {
+            const formData = new FormData(e.target);
+            const res = await fetch('/posts', {
+              method: 'POST',
+              body: formData
+            });
+
+            if (res.ok) {
+              alert("✅ Upload successful, please wait for admin approval.");
+              uploadModal.classList.remove('active');
+              location.reload();
+            } else {
+              throw new Error('Upload failed');
+            }
+          } catch (error) {
+            alert("❌ Upload failed, please try again");
+          } finally {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+          }
+        });
+
+        // Like functionality
+        document.querySelectorAll('.like-btn').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const postId = btn.dataset.id;
+            const heartIcon = btn.querySelector('i');
+            const countSpan = btn.querySelector('span');
+
+            // Optimistic UI update
+            const wasLiked = btn.classList.contains('liked');
+            btn.classList.toggle('liked');
+
+            try {
+              const res = await fetch(`/posts/${postId}/like`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                }
+              });
+
+              if (res.ok) {
+                const data = await res.json();
+                countSpan.innerText = data.likes;
+              } else {
+                // Revert on error
+                btn.classList.toggle('liked');
+                throw new Error('Like failed');
+              }
+            } catch (error) {
+              console.error('Error liking post:', error);
+              btn.classList.toggle('liked');
+            }
+          });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && uploadModal.classList.contains('active')) {
+            uploadModal.classList.remove('active');
+          }
+        });
+
+        // Lazy loading สำหรับรูปภาพ
+        if ('IntersectionObserver' in window) {
+          const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.classList.remove('lazy');
+                imageObserver.unobserve(img);
+              }
+            });
+          });
+
+          document.querySelectorAll('img[data-src]').forEach(img => {
+            imageObserver.observe(img);
+          });
+        }
+      </script>
+</body>
+
+</html>
